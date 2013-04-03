@@ -37,6 +37,16 @@ class LiquibasePluginTest {
     }
 
     @Test
+    void 'liquibase plugin configuration should be transitive'() {
+        assert project.configurations.findByName(LiquibasePlugin.LIQUIBASE).isTransitive()
+    }
+
+    @Test
+    void 'liquibase plugin configuration should not be visible'() {
+        assert !project.configurations.findByName(LiquibasePlugin.LIQUIBASE).isVisible()
+    }
+
+    @Test
     void 'liquibase plugin extension should set a default master changelog filename is none is configured'() {
         assert LiquibasePluginExtension.DEFAULT_MASTER_CHANGELOG_NAME == project.extensions.findByType(LiquibasePluginExtension).masterChangelogName
     }
