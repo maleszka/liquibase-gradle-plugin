@@ -29,6 +29,11 @@ class MasterChangelogTask extends DefaultTask {
         logger.debug('Creating master changelog file [{}] on [{}]', project.liquibase.masterChangelogName, BASE_PATH)
         project.mkdir(BASE_PATH)
         File masterChangelog = project.file("$BASE_PATH/${project.liquibase.masterChangelogName}")
-        masterChangelog.write LIQUIBASE_XML, 'UTF-8'
+        if (!masterChangelog.exists()) {
+            logger.debug('Master changelog doesn\'t exits, writing default XML')
+            masterChangelog.write LIQUIBASE_XML, 'UTF-8'
+        } else {
+            logger.debug('Master changelog does exits, doing nothing')
+        }
     }
 }

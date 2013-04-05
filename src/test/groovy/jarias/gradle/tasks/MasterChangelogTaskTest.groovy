@@ -17,6 +17,7 @@ class MasterChangelogTaskTest {
 
     MasterChangelogTask task
     Project project
+    String masterChangelogFullPath
 
     final String PROJECT_PATH = '/tmp/liquibasePluginTest'
     final String LIQUIBASE_XML = '<?xml version="1.0" encoding="UTF-8"?><databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"></databaseChangeLog>'
@@ -26,6 +27,7 @@ class MasterChangelogTaskTest {
         project = ProjectBuilder.builder().withProjectDir(new File(PROJECT_PATH)).build()
         project.apply plugin: 'liquibase'
         task = project.tasks.masterChangelog
+        masterChangelogFullPath = "$PROJECT_PATH/src/main/resources/db/changelog/${project.liquibase.masterChangelogName}"
     }
 
     @After
@@ -42,13 +44,25 @@ class MasterChangelogTaskTest {
     void 'generateMaterChangelog should create the master changelog XML file'() {
         task.generateMasterChangelog()
 
-        assert new File("$PROJECT_PATH/src/main/resources/db/changelog/${project.liquibase.masterChangelogName}").exists()
+
+        assert new File(masterChangelogFullPath).exists()
+    }
+
+    @Test
+    void 'generateMasterChangelog should be idempotent'() {
+        task.generateMasterChangelog()
+
+        new File(masterChangelogFullPath).write 'User change'
+
+        task.generateMasterChangelog()
+
+        assert 'User change' == new File(masterChangelogFullPath).text
     }
 
     @Test
     void 'the generated master changelog file should contain the proper liquibase XML'() {
         task.generateMasterChangelog()
 
-        assert LIQUIBASE_XML == new File("$PROJECT_PATH/src/main/resources/db/changelog/${project.liquibase.masterChangelogName}").text
+        assert LIQUIBASE_XML == new File(masterChangelogFullPath).text
     }
 }
