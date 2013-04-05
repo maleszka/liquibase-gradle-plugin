@@ -1,6 +1,9 @@
 apply plugin: 'groovy'
 apply plugin: 'idea'
 
+version = '0.0.1.alpha'
+group = 'jarias.gradle'
+
 task wrapper(type: Wrapper) {
     gradleVersion = '1.5'
 }
