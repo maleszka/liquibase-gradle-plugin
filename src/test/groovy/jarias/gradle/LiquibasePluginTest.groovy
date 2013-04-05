@@ -1,5 +1,6 @@
 package jarias.gradle
 
+import jarias.gradle.tasks.MasterChangelogTask
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Before
@@ -24,6 +25,11 @@ class LiquibasePluginTest {
     void setup() {
         project = ProjectBuilder.builder().build()
         project.apply plugin: 'liquibase'
+    }
+
+    @Test
+    void 'liquibase plugin should create a masterChangelog task'() {
+        assert project.tasks.masterChangelog instanceof MasterChangelogTask
     }
 
     @Test
