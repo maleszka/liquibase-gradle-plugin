@@ -6,11 +6,15 @@ import org.gradle.api.DefaultTask
  * @author jarias
  * @since 4/5/13 7:46 PM 
  */
-class AbstractLiquibaseTask extends DefaultTask {
+abstract class AbstractLiquibaseTask extends DefaultTask {
+    /**
+     * The relative path of all changelog files, use to update the master changelog with the include tags
+     */
+    protected final String RELATIVE_PATH = 'db/changelog'
     /**
      * The base path for the master change log
      */
-    protected final String BASE_PATH = 'src/main/resources/db/changelog'
+    protected final String BASE_PATH = "src/main/resources/$RELATIVE_PATH"
     /**
      * The base liquibase changelog XML content
      */

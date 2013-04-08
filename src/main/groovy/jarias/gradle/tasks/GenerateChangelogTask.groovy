@@ -20,6 +20,7 @@ class GenerateChangelogTask extends AbstractLiquibaseTask {
         String changelogName = project.property('changelog')
         File changelog = project.file("$BASE_PATH/$changelogName")
         changelog.write generateXml()
+        updateMasterChangelog(changelogName)
     }
 
     def generateXml() {
@@ -31,5 +32,17 @@ class GenerateChangelogTask extends AbstractLiquibaseTask {
             }
         }
         xml
+    }
+
+    def updateMasterChangelog(String changelogName) {
+        File masterChangelog = project.file("$BASE_PATH/${project.liquibase.masterChangelogName}")
+        def root = new XmlSlurper(false, false).parse(masterChangelog)
+
+        root.appendNode {
+            include(file: "$RELATIVE_PATH/db.changelog-${changelogName}.xml")
+        }
+
+        String xml = (new StreamingMarkupBuilder()).bind { mkp.yield root }
+        masterChangelog.write xml
     }
 }

@@ -22,9 +22,13 @@ class GenerateChangelogTaskTest {
     Project project
     String changelogFullPath
     String changelogXML
+    String masterChangelogXML
+    String masterChangelogAppendXML
+    String masterChangelogFullPath
 
     final String PROJECT_PATH = '/tmp/liquibasePluginTest'
     final String CHANGELOG_NAME = 'test.changelog'
+    final String LIQUIBASE_XML = '<?xml version="1.0" encoding="UTF-8"?><databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"></databaseChangeLog>'
 
     @Before
     void setup() {
@@ -32,6 +36,11 @@ class GenerateChangelogTaskTest {
         project.apply plugin: 'liquibase'
         task = project.tasks.generateChangelog
         changelogFullPath = "$PROJECT_PATH/src/main/resources/db/changelog/$CHANGELOG_NAME"
+
+        //Create a master changelog
+        project.mkdir('src/main/resources/db/changelog')
+        project.file("src/main/resources/db/changelog/${project.liquibase.masterChangelogName}").write LIQUIBASE_XML
+        masterChangelogFullPath = "$PROJECT_PATH/src/main/resources/db/changelog/${project.liquibase.masterChangelogName}"
 
         XMLUnit.ignoreWhitespace = true
 
@@ -41,6 +50,18 @@ class GenerateChangelogTaskTest {
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
     <changeSet author="${System.properties.getProperty("user.name")}" id="${DateTime.now().millis}-1">
     </changeSet>
+</databaseChangeLog>
+"""
+
+        masterChangelogXML = """
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <include file="db/changelog/db.changelog-${CHANGELOG_NAME}.xml"/>
+</databaseChangeLog>
+"""
+        masterChangelogAppendXML = """
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <include file="db/changelog/db.changelog-${CHANGELOG_NAME}.xml"/>
+    <include file="db/changelog/db.changelog-${CHANGELOG_NAME}-2.xml"/>
 </databaseChangeLog>
 """
     }
@@ -72,7 +93,28 @@ class GenerateChangelogTaskTest {
     void 'the generated changelog file should contain the proper liquibase XML'() {
         project.extensions.add('changelog', CHANGELOG_NAME)
         task.generateChangelog()
+
         Diff diff = new Diff(changelogXML, new File(changelogFullPath).text)
+        assert diff.similar()
+    }
+
+    @Test
+    void 'generateChangelog should add the include tag to the master changelog'() {
+        project.extensions.add('changelog', CHANGELOG_NAME)
+        task.generateChangelog()
+
+        Diff diff = new Diff(masterChangelogXML, new File(masterChangelogFullPath).text)
+        assert diff.similar()
+    }
+
+    @Test
+    void 'generateChangelog should not override previous include tags it should only append'() {
+        project.setProperty('changelog', CHANGELOG_NAME)
+        task.generateChangelog()
+        project.setProperty('changelog', CHANGELOG_NAME + '-2')
+        task.generateChangelog()
+
+        Diff diff = new Diff(masterChangelogAppendXML, new File(masterChangelogFullPath).text)
         assert diff.similar()
     }
 }
