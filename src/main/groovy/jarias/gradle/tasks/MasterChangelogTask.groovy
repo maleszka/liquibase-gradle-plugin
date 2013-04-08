@@ -21,7 +21,7 @@ class MasterChangelogTask extends AbstractLiquibaseTask {
         File masterChangelog = project.file("$BASE_PATH/${project.liquibase.masterChangelogName}")
         if (!masterChangelog.exists()) {
             logger.debug('Master changelog doesn\'t exits, writing default XML')
-            masterChangelog.write LIQUIBASE_XML, 'UTF-8'
+            writeXml(LIQUIBASE_XML, masterChangelog)
         } else {
             logger.debug('Master changelog does exits, doing nothing')
         }

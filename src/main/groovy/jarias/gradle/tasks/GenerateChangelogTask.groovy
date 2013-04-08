@@ -19,7 +19,7 @@ class GenerateChangelogTask extends AbstractLiquibaseTask {
         project.mkdir(BASE_PATH)
         String changelogName = project.property('changelog')
         File changelog = project.file("$BASE_PATH/$changelogName")
-        changelog.write generateXml()
+        writeXml(generateXml(), changelog)
         updateMasterChangelog(changelogName)
     }
 
@@ -43,6 +43,6 @@ class GenerateChangelogTask extends AbstractLiquibaseTask {
         }
 
         String xml = (new StreamingMarkupBuilder()).bind { mkp.yield root }
-        masterChangelog.write xml
+        writeXml(xml, masterChangelog)
     }
 }

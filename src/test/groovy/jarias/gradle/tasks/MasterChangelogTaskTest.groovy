@@ -1,5 +1,6 @@
 package jarias.gradle.tasks
 
+import org.custommonkey.xmlunit.Diff
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
 import org.gradle.testfixtures.ProjectBuilder
@@ -20,7 +21,7 @@ class MasterChangelogTaskTest {
     String masterChangelogFullPath
 
     final String PROJECT_PATH = '/tmp/liquibasePluginTest'
-    final String LIQUIBASE_XML = '<?xml version="1.0" encoding="UTF-8"?><databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"></databaseChangeLog>'
+    final String LIQUIBASE_XML = '<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"></databaseChangeLog>'
 
     @Before
     void setup() {
@@ -63,6 +64,7 @@ class MasterChangelogTaskTest {
     void 'the generated master changelog file should contain the proper liquibase XML'() {
         task.generateMasterChangelog()
 
-        assert LIQUIBASE_XML == new File(masterChangelogFullPath).text
+        Diff diff = new Diff(LIQUIBASE_XML, new File(masterChangelogFullPath).text)
+        assert diff.similar()
     }
 }
