@@ -1,5 +1,6 @@
 package jarias.gradle
 
+import jarias.gradle.tasks.GenerateChangelogTask
 import jarias.gradle.tasks.MasterChangelogTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -22,5 +23,6 @@ class LiquibasePlugin implements Plugin<Project> {
                 .setDescription('The Liquibase libraries and JDBC driver to use for this project.')
         //liquibase tasks
         target.task('masterChangelog', type: MasterChangelogTask)
+        target.task('generateChangelog', type: GenerateChangelogTask)
     }
 }
