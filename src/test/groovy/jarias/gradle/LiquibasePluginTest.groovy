@@ -2,6 +2,8 @@ package jarias.gradle
 
 import jarias.gradle.tasks.GenerateChangelogTask
 import jarias.gradle.tasks.MasterChangelogTask
+import jarias.gradle.tasks.MigrateDatabaseTask
+import jarias.gradle.tasks.MigrateDatabaseTaskTest
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Before
@@ -36,6 +38,11 @@ class LiquibasePluginTest {
     @Test
     void 'liquibase plugin should create a generateChangelog task'() {
         assert project.tasks.generateChangelog instanceof GenerateChangelogTask
+    }
+
+    @Test
+    void 'liquibase plugin should create a migrateDatabase task'() {
+        assert project.tasks.migrateDatabase instanceof MigrateDatabaseTask
     }
 
     @Test

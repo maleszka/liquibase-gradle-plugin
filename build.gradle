@@ -14,7 +14,10 @@ repositories {
 
 dependencies {
     testCompile 'xmlunit:xmlunit:1.4'
+    testCompile 'org.hsqldb:hsqldb:2.2.9'
     compile gradleApi()
+    compile 'commons-dbcp:commons-dbcp:1.4'
+    compile 'org.liquibase:liquibase-core:2.0.5'
     compile 'joda-time:joda-time:2.2'
     groovy localGroovy()
 }

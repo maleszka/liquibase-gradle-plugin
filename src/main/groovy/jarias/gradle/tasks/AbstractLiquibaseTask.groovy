@@ -1,5 +1,6 @@
 package jarias.gradle.tasks
 
+import jarias.gradle.LiquibasePluginExtension
 import org.gradle.api.DefaultTask
 
 import javax.xml.transform.OutputKeys
@@ -25,6 +26,15 @@ abstract class AbstractLiquibaseTask extends DefaultTask {
      * The base liquibase changelog XML content
      */
     protected final String LIQUIBASE_XML = '<?xml version="1.0" encoding="UTF-8"?><databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"></databaseChangeLog>'
+
+    /**
+     * Returns the {@link LiquibasePluginExtension} of the project
+     *
+     * @return The LiquibasePluginExtension
+     */
+    LiquibasePluginExtension getConfiguration() {
+        project.extensions.findByType(LiquibasePluginExtension)
+    }
 
     /**
      * Writes and XML string with proper XML declaration and indentation using javax.xml.transform.Transformer
