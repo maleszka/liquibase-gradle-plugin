@@ -5,7 +5,7 @@ version = '0.0.1.alpha'
 group = 'jarias.gradle'
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.5'
+    gradleVersion = '1.6'
 }
 
 repositories {
@@ -16,8 +16,8 @@ dependencies {
     testCompile 'xmlunit:xmlunit:1.4'
     testCompile 'org.hsqldb:hsqldb:2.2.9'
     compile gradleApi()
+    compile localGroovy()
     compile 'commons-dbcp:commons-dbcp:1.4'
     compile 'org.liquibase:liquibase-core:2.0.5'
     compile 'joda-time:joda-time:2.2'
-    groovy localGroovy()
 }
