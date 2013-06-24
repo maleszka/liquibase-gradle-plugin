@@ -1,5 +1,7 @@
 #Liquibase Gradle Plugin
 
+[![Build Status](https://drone.io/github.com/jarias/liquibase-gradle-plugin/status.png)](https://drone.io/github.com/jarias/liquibase-gradle-plugin/latest)
+
 Gradle plugin for creating and running [Liquibase](http://www.liquibase.org/) based database migrations.
 
 ##Configuring
