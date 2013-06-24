@@ -2,7 +2,7 @@ apply plugin: 'groovy'
 apply plugin: 'idea'
 apply plugin: 'maven'
 
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 group = 'jarias.gradle'
 
 task wrapper(type: Wrapper) {
