@@ -15,7 +15,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'jarias.gradle:liquibase-gradle-plugin:0.0.1-SNAPSHOT'
+        classpath 'jarias.gradle:liquibase-gradle-plugin:1.0.0'
     }
 }
 
@@ -43,7 +43,8 @@ dependencies {
      
 * `masterChangelog`: Creates the master changelog in `src/main/resources/db/changelog`.
 * `generateChangelog`: Creates a new changelog the name is set via the changelog property `-Pchangelog=test` the task also includes the new changelog in master changelog.
-* `migrateDatabase`: Migrates the database to the latest changes.	
+* `migrateDatabase`: Migrates the database to the latest changes.
+* `rollbackDatabase`: Rollsback the database 1 changelog back.
 	
 ##License
 
