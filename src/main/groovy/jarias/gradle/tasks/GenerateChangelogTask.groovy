@@ -39,7 +39,7 @@ class GenerateChangelogTask extends AbstractLiquibaseTask {
         def root = new XmlSlurper(false, false).parse(masterChangelog)
 
         root.appendNode {
-            include(file: "$RELATIVE_PATH/db.changelog-${changelogName}.xml")
+            include(file: "db.changelog-${changelogName}.xml", relativeToChangelogFile: "true")
         }
 
         String xml = (new StreamingMarkupBuilder()).bind { mkp.yield root }

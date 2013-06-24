@@ -55,13 +55,13 @@ class GenerateChangelogTaskTest {
 
         masterChangelogXML = """
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    <include file="db/changelog/db.changelog-${CHANGELOG_NAME}.xml"/>
+    <include file="db.changelog-${CHANGELOG_NAME}.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
 """
         masterChangelogAppendXML = """
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    <include file="db/changelog/db.changelog-${CHANGELOG_NAME}.xml"/>
-    <include file="db/changelog/db.changelog-${CHANGELOG_NAME}-2.xml"/>
+    <include file="db.changelog-${CHANGELOG_NAME}.xml" relativeToChangelogFile="true"/>
+    <include file="db.changelog-${CHANGELOG_NAME}-2.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
 """
     }
