@@ -1,5 +1,36 @@
 apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'maven'
+
+version = '1.0.0'
+group = 'jarias.gradle'
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '1.5'
+    gradleVersion = '1.6'
+}
+
+repositories {
+    mavenCentral()
+}
+
+uploadArchives {
+    repositories {
+        ivy {
+            url = 'https://api.bintray.com/content/' + BINTRAY_USERNAME + '/gradle-plugins/liquibase-gradle-plugin/' + version
+            credentials {
+                username BINTRAY_USERNAME
+                password BINTRAY_API_KEY
+            }
+        }
+    }
+}
+
+dependencies {
+    testCompile 'xmlunit:xmlunit:1.4'
+    testCompile 'org.hsqldb:hsqldb:2.2.9'
+    compile gradleApi()
+    compile localGroovy()
+    compile 'commons-dbcp:commons-dbcp:1.4'
+    compile 'org.liquibase:liquibase-core:2.0.5'
+    compile 'joda-time:joda-time:2.2'
 }
