@@ -35,7 +35,7 @@ class GenerateChangelogTaskTest {
         project = ProjectBuilder.builder().withProjectDir(new File(PROJECT_PATH)).build()
         project.apply plugin: 'liquibase'
         task = project.tasks.generateChangelog
-        changelogFullPath = "$PROJECT_PATH/src/main/resources/db/changelog/$CHANGELOG_NAME"
+        changelogFullPath = "$PROJECT_PATH/src/main/resources/db/changelog/db.changelog-${CHANGELOG_NAME}.xml"
 
         //Create a master changelog
         project.mkdir('src/main/resources/db/changelog')

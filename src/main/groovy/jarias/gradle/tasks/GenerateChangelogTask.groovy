@@ -18,7 +18,7 @@ class GenerateChangelogTask extends AbstractLiquibaseTask {
         //It should exist just making sure
         project.mkdir(BASE_PATH)
         String changelogName = project.property('changelog')
-        File changelog = project.file("$BASE_PATH/$changelogName")
+        File changelog = project.file("$BASE_PATH/db.changelog-${changelogName}.xml")
         writeXml(generateXml(), changelog)
         updateMasterChangelog(changelogName)
     }
