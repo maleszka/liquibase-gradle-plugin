@@ -12,6 +12,18 @@ repositories {
     mavenCentral()
 }
 
+uploadArchives {
+    repositories {
+        ivy {
+            url = 'https://api.bintray.com/content/' + BINTRAY_USERNAME + '/gradle-plugins/liquibase-gradle-plugin/' + version
+            credentials {
+                username BINTRAY_USERNAME
+                password BINTRAY_API_KEY
+            }
+        }
+    }
+}
+
 dependencies {
     testCompile 'xmlunit:xmlunit:1.4'
     testCompile 'org.hsqldb:hsqldb:2.2.9'
