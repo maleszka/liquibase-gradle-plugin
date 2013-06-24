@@ -6,8 +6,6 @@ Gradle plugin for creating and running [Liquibase](http://www.liquibase.org/) ba
 
 ##Configuring
 
-Currently the jar file is not hosted 
-
 ```groovy
 buildscript {
     repositories {
@@ -29,6 +27,7 @@ repositories {
 }
 
 liquibase {
+    //Your database properties
     jdbcUrl = 'jdbc:hsqldb:file:/tmp/testdb'
     jdbcDriverClassName = 'org.hsqldb.jdbc.JDBCDriver'
     jdbcUsername = 'sa'
@@ -36,21 +35,15 @@ liquibase {
 }
 
 dependencies {
-    liquibase 'org.hsqldb:hsqldb:2.2.9'
+    liquibase 'org.hsqldb:hsqldb:2.2.9' //Or whatever JDBC driver you need
 }
 ```
 
-**Available Tasks:**
-
-     #Creates the master changelog in src/main/resources/db/changelog
-    gradle masterChangelog
-
-	#Creates a new changelog with name pass as the changelog property and modifies the master to include this new changelog
-	gradle generateChangelog -Pchangelog=test 
-	
-	#Migrates the database to the latest changes
-	gradle migrateDatabase
-	
+##Tasks
+     
+* `masterChangelog`: Creates the master changelog in `src/main/resources/db/changelog`.
+* `generateChangelog`: Creates a new changelog the name is set via the changelog property `-Pchangelog=test` the task also includes the new changelog in master changelog.
+* `migrateDatabase`: Migrates the database to the latest changes.	
 	
 ##License
 
