@@ -20,12 +20,14 @@ class MigrateDatabaseTask extends AbstractLiquibaseTask {
      */
     @TaskAction
     def migrateDatabase() {
-        Liquibase liquibase = new Liquibase(
-                "$BASE_PATH/${configuration.masterChangelogName}",
-                new FileSystemResourceAccessor(project.projectDir.absolutePath),
-                DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(datasource().connection))
-        )
-        liquibase.update(null)
+        doInLiquibaseClasspath {
+            Liquibase liquibase = new Liquibase(
+                    "$BASE_PATH/${configuration.masterChangelogName}",
+                    new FileSystemResourceAccessor(project.projectDir.absolutePath),
+                    DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(datasource().connection))
+            )
+            liquibase.update(null)
+        }
     }
 
     /**

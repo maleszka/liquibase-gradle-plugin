@@ -25,6 +25,6 @@ class LiquibasePlugin implements Plugin<Project> {
         //liquibase tasks
         target.task('masterChangelog', type: MasterChangelogTask)
         target.task('generateChangelog', type: GenerateChangelogTask)
-        target.task('migrateDatabase', type: MigrateDatabaseTask)
+        target.task('migrateDatabase', type: MigrateDatabaseTask).dependsOn = ['build']
     }
 }

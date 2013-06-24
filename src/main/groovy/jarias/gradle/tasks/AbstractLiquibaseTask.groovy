@@ -1,7 +1,10 @@
 package jarias.gradle.tasks
 
+import jarias.gradle.LiquibasePlugin
 import jarias.gradle.LiquibasePluginExtension
+import org.apache.tools.ant.AntClassLoader
 import org.gradle.api.DefaultTask
+import org.gradle.api.UncheckedIOException
 
 import javax.xml.transform.OutputKeys
 import javax.xml.transform.Transformer
@@ -54,5 +57,51 @@ abstract class AbstractLiquibaseTask extends DefaultTask {
 
         StreamResult result = new StreamResult(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))
         transformer.transform(new StreamSource(new ByteArrayInputStream(xml.bytes)), result)
+    }
+
+    def doInLiquibaseClasspath(Closure v) {
+        ClassLoader originalClassLoader = getClass().classLoader
+        URLClassLoader liquibaseClassloader = createLiquibaseClassLoader()
+        try {
+            Thread.currentThread().contextClassLoader = liquibaseClassloader
+            v.call()
+        }
+        finally {
+            Thread.currentThread().contextClassLoader = originalClassLoader
+        }
+    }
+
+    private URLClassLoader createLiquibaseClassLoader() {
+        ClassLoader rootClassLoader = new AntClassLoader(getClass().classLoader, false)
+        return new URLClassLoader(getAllClasspathResources(), rootClassLoader)
+    }
+
+    private URL[] getAllClasspathResources() {
+        List<URL> resources = getConfigurationClasshpath('classpath')
+        resources.addAll(getConfigurationClasshpath(LiquibasePlugin.LIQUIBASE))
+        return resources.toArray(new URL[resources.size()])
+    }
+
+    private List<URL> getConfigurationClasshpath(String configurationName) {
+        final Set<File> files
+
+        if ('classpath' == configurationName) {
+            files = project.buildscript.configurations.getByName(configurationName).asFileTree.files
+        } else {
+            files = project.configurations.getByName(configurationName).asFileTree.files
+        }
+
+        final List<URL> urls = new ArrayList<URL>(files.size())
+
+        for (File file : files) {
+            try {
+                urls.add(file.toURI().toURL())
+            }
+            catch (MalformedURLException e) {
+                throw new UncheckedIOException(e)
+            }
+        }
+
+        return urls
     }
 }
