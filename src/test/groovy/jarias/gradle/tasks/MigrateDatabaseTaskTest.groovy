@@ -1,7 +1,6 @@
 package jarias.gradle.tasks
 
 import groovy.sql.Sql
-import org.apache.commons.dbcp.BasicDataSource
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
 import org.gradle.testfixtures.ProjectBuilder
@@ -10,10 +9,6 @@ import org.junit.Before
 import org.junit.Test
 
 import java.lang.reflect.Method
-import java.sql.DatabaseMetaData
-import java.sql.DriverManager
-import java.sql.ResultSet
-import java.sql.Statement
 
 /**
  * @author jarias
