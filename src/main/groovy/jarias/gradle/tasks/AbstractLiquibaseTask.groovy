@@ -2,6 +2,7 @@ package jarias.gradle.tasks
 
 import jarias.gradle.LiquibasePlugin
 import jarias.gradle.LiquibasePluginExtension
+import org.apache.commons.dbcp.BasicDataSource
 import org.apache.tools.ant.AntClassLoader
 import org.gradle.api.DefaultTask
 import org.gradle.api.UncheckedIOException
@@ -103,5 +104,19 @@ abstract class AbstractLiquibaseTask extends DefaultTask {
         }
 
         return urls
+    }
+
+    /**
+     * Creates and returns the datasource
+     *
+     * @return A DBCP datasource based on the extension configuration
+     */
+    def datasource() {
+        new BasicDataSource(
+                driverClassName: configuration.jdbcDriverClassName,
+                username: configuration.jdbcUsername,
+                password: configuration.jdbcPassword,
+                url: configuration.jdbcUrl,
+        )
     }
 }

@@ -6,26 +6,28 @@ import liquibase.database.jvm.JdbcConnection
 import liquibase.resource.FileSystemResourceAccessor
 import org.gradle.api.tasks.TaskAction
 
-/**
- * This task migrates the database via liquibase
- *
- * @author jarias
- * @since 5/24/13 6:09 PM 
- */
-class MigrateDatabaseTask extends AbstractLiquibaseTask {
+import java.sql.Connection
 
+/**
+ * This task rollbacks the database via liquibase
+ *
+ * @author Julio Arias
+ * @since 6/24/13 7:28 PM 
+ */
+class RollbackDatabaseTask extends AbstractLiquibaseTask {
     /**
-     * Migrates the database base on the configuration
+     * Rollbacks the database
      */
     @TaskAction
-    def migrateDatabase() {
+    def rollbackDatabase() {
         doInLiquibaseClasspath {
+            final Connection connection = datasource().connection
             Liquibase liquibase = new Liquibase(
                     "$BASE_PATH/${configuration.masterChangelogName}",
                     new FileSystemResourceAccessor(project.projectDir.absolutePath),
-                    DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(datasource().connection))
+                    DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection))
             )
-            liquibase.update(null)
+            liquibase.rollback(1, null)
         }
     }
 }

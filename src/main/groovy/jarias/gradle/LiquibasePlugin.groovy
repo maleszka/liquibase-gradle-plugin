@@ -3,6 +3,7 @@ package jarias.gradle
 import jarias.gradle.tasks.GenerateChangelogTask
 import jarias.gradle.tasks.MasterChangelogTask
 import jarias.gradle.tasks.MigrateDatabaseTask
+import jarias.gradle.tasks.RollbackDatabaseTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -25,6 +26,7 @@ class LiquibasePlugin implements Plugin<Project> {
         //liquibase tasks
         target.task('masterChangelog', type: MasterChangelogTask)
         target.task('generateChangelog', type: GenerateChangelogTask)
-        target.task('migrateDatabase', type: MigrateDatabaseTask).dependsOn = ['build']
+        target.task('migrateDatabase', type: MigrateDatabaseTask)
+        target.task('rollbackDatabase', type: RollbackDatabaseTask)
     }
 }

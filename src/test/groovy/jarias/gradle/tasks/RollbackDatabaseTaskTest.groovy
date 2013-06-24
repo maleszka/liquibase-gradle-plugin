@@ -9,15 +9,16 @@ import org.junit.Before
 import org.junit.Test
 
 import java.lang.reflect.Method
+import java.sql.SQLSyntaxErrorException
 
 /**
- * @author jarias
- * @since 5/24/13 5:58 PM 
+ * @author Julio Arias
+ * @since 6/24/13 7:25 PM 
  */
-class MigrateDatabaseTaskTest {
-
+class RollbackDatabaseTaskTest {
     Project project
-    MigrateDatabaseTask task
+    RollbackDatabaseTask task
+    MigrateDatabaseTask migrateTask
     def sql
 
     final String JDBC_URL = 'jdbc:hsqldb:file:/tmp/testdb/testdb'
@@ -28,6 +29,11 @@ class MigrateDatabaseTaskTest {
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
     <changeSet id="1" author="test">
         <createTable tableName="test">
+            <column name="id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="test">
+        <createTable tableName="test2">
             <column name="id" type="INTEGER"/>
         </createTable>
     </changeSet>
@@ -44,7 +50,8 @@ class MigrateDatabaseTaskTest {
             jdbcUsername = 'sa'
             jdbcPassword = ''
         }
-        task = project.tasks.migrateDatabase
+        task = project.tasks.rollbackDatabase
+        migrateTask = project.tasks.migrateDatabase
 
         //Create sample master changelog for integration testing
         project.mkdir('src/main/resources/db/changelog')
@@ -59,18 +66,26 @@ class MigrateDatabaseTaskTest {
     }
 
     @Test
-    void 'migrateDatabase should be the task action'() {
-        assert MigrateDatabaseTask.declaredMethods.find { Method m -> m.name == 'migrateDatabase' }.isAnnotationPresent(TaskAction)
+    void 'rollbackDatabase should be the task action'() {
+        assert RollbackDatabaseTask.declaredMethods.find { Method m -> m.name == 'rollbackDatabase' }.isAnnotationPresent(TaskAction)
     }
 
     @Test
-    void 'migrateDatabase should migrate the database'() {
-        task.migrateDatabase()
+    void 'rollbackDatabase should rollback the database 1 changelog back if no param is given'() {
+        migrateTask.migrateDatabase()
 
         sql = Sql.newInstance(JDBC_URL, 'sa', '', DRIVER_CLASS_NAME)
 
         sql.execute("INSERT INTO TEST (id) values (1)")
 
         assert 1 == sql.firstRow('SELECT id FROM test').id
+
+        task.rollbackDatabase()
+
+        try {
+            sql.execute("INSERT INTO TEST2 (id) values (1)")
+        } catch (SQLSyntaxErrorException exception) {
+            assert "user lacks privilege or object not found: TEST2" == exception.message
+        }
     }
 }
