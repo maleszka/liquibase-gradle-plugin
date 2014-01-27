@@ -43,6 +43,7 @@ class MigrateDatabaseTaskTest {
             jdbcDriverClassName = DRIVER_CLASS_NAME
             jdbcUsername = 'sa'
             jdbcPassword = ''
+            basePath = 'src/main/resources/db/changelog'
         }
         task = project.tasks.migrateDatabase
 

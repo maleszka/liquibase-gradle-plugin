@@ -16,9 +16,15 @@ class GenerateChangelogTask extends AbstractLiquibaseTask {
         }
 
         //It should exist just making sure
-        project.mkdir(BASE_PATH)
+        if(configuration.basePath) {
+            project.mkdir(configuration.basePath)
+        }
         String changelogName = project.property('changelog')
-        File changelog = project.file("$BASE_PATH/db.changelog-${changelogName}.xml")
+        String path = "db.changelog-${changelogName}.xml"
+        if(configuration.basePath) {
+          path = "$configuration.basePath/$path"
+        }
+        File changelog = project.file(path)
         writeXml(generateXml(), changelog)
         updateMasterChangelog(changelogName)
     }
@@ -35,7 +41,11 @@ class GenerateChangelogTask extends AbstractLiquibaseTask {
     }
 
     def updateMasterChangelog(String changelogName) {
-        File masterChangelog = project.file("$BASE_PATH/${project.liquibase.masterChangelogName}")
+        def path = project.liquibase.masterChangelogName
+        if(configuration.basePath) {
+          path = "$configuration.basePath/$path"
+        }
+        File masterChangelog = project.file(path)
         def root = new XmlSlurper(false, false).parse(masterChangelog)
 
         root.appendNode {

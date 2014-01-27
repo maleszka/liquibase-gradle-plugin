@@ -23,8 +23,8 @@ class RollbackDatabaseTask extends AbstractLiquibaseTask {
         doInLiquibaseClasspath {
             final Connection connection = datasource().connection
             Liquibase liquibase = new Liquibase(
-                    "$BASE_PATH/${configuration.masterChangelogName}",
-                    new FileSystemResourceAccessor(project.projectDir.absolutePath),
+                    "${configuration.masterChangelogName}",
+                    new FileSystemResourceAccessor("$project.projectDir.absolutePath/$configuration.basePath"),
                     DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection))
             )
             liquibase.rollback(1, null)

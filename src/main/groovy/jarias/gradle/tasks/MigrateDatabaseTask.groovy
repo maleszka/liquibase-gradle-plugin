@@ -3,6 +3,7 @@ package jarias.gradle.tasks
 import liquibase.Liquibase
 import liquibase.database.DatabaseFactory
 import liquibase.database.jvm.JdbcConnection
+import liquibase.resource.ClassLoaderResourceAccessor
 import liquibase.resource.FileSystemResourceAccessor
 import org.gradle.api.tasks.TaskAction
 
@@ -21,8 +22,8 @@ class MigrateDatabaseTask extends AbstractLiquibaseTask {
     def migrateDatabase() {
         doInLiquibaseClasspath {
             Liquibase liquibase = new Liquibase(
-                    "$BASE_PATH/${configuration.masterChangelogName}",
-                    new FileSystemResourceAccessor(project.projectDir.absolutePath),
+                    "${configuration.masterChangelogName}",
+                    new FileSystemResourceAccessor("$project.projectDir.absolutePath/$configuration.basePath"),
                     DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(datasource().connection))
             )
             liquibase.update(null)

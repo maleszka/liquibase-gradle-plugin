@@ -26,4 +26,9 @@ class LiquibasePluginExtension {
      * JDBC database password
      */
     String jdbcPassword
+
+    /**
+     * The base path for the changelog and sql files
+     */
+    String basePath
 }

@@ -21,11 +21,11 @@ abstract class AbstractLiquibaseTask extends DefaultTask {
     /**
      * The relative path of all changelog files, use to update the master changelog with the include tags
      */
-    protected final String RELATIVE_PATH = 'db/changelog'
+    // protected final String RELATIVE_PATH = 'db/changelog'
     /**
      * The base path for the master change log
      */
-    protected final String BASE_PATH = "src/main/resources/$RELATIVE_PATH"
+    // protected final String BASE_PATH = "src/main/resources/$RELATIVE_PATH"
     /**
      * The base liquibase changelog XML content
      */

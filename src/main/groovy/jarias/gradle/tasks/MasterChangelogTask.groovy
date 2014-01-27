@@ -16,9 +16,9 @@ class MasterChangelogTask extends AbstractLiquibaseTask {
      */
     @TaskAction
     def generateMasterChangelog() {
-        logger.debug('Creating master changelog file [{}] on [{}]', project.liquibase.masterChangelogName, BASE_PATH)
-        project.mkdir(BASE_PATH)
-        File masterChangelog = project.file("$BASE_PATH/${project.liquibase.masterChangelogName}")
+        logger.debug('Creating master changelog file [{}] on [{}]', project.liquibase.masterChangelogName, configuration.basePath)
+        project.mkdir(configuration.basePath)
+        File masterChangelog = project.file("$configuration.basePath/${project.liquibase.masterChangelogName}")
         if (!masterChangelog.exists()) {
             logger.debug('Master changelog doesn\'t exits, writing default XML')
             writeXml(LIQUIBASE_XML, masterChangelog)
